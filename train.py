@@ -68,15 +68,18 @@ def resize_target(target, size):
 @click.command()
 @click.option('--config', '-c', type=str, required=True)
 @click.option('--cuda/--no-cuda', default=True)
-def main(config, cuda):
+@click.option('--gpu', type=str,default='0')
+def main(config, cuda,gpu):
     # Configuration
     CONFIG = Dict(yaml.load(open(config)))
 
     # CUDA check
     cuda = cuda and torch.cuda.is_available()
+
     if cuda:
+        gpu_ids = [int(string) for string in gpu.split(',')]
         current_device = torch.cuda.current_device()
-        print('Running on', torch.cuda.get_device_name(current_device))
+        print('Running on', torch.cuda.get_device_name(current_device),gpu_ids)
 
     # Dataset
     dataset = CocoStuff10k(
@@ -101,7 +104,7 @@ def main(config, cuda):
     model = DeepLabV2_ResNet101_MSC(n_classes=CONFIG.N_CLASSES)
     state_dict = torch.load(CONFIG.INIT_MODEL)
     model.load_state_dict(state_dict, strict=False)  # Skip "aspp" layer
-    model = nn.DataParallel(model)
+    model = nn.DataParallel(model,device_ids=gpu_ids)
     if cuda:
         model.cuda()
 

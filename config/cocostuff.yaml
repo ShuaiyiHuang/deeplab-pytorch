@@ -1,5 +1,5 @@
 DATASET: cocostuff
-ROOT: /media/kazuto1011/Extra/cocostuff/cocostuff-10k-v1.1
+ROOT: ../data/cocostuff-10k-v1.1
 LABELS: ./data/datasets/cocostuff/labels_2.txt
 
 IMAGE:
@@ -17,7 +17,7 @@ N_BLOCKS: [3, 4, 23, 3]
 PYRAMIDS: [6, 12, 18, 24]
 
 # Training setting
-BATCH_SIZE: 5
+BATCH_SIZE: 10
 IGNORE_LABEL: -1
 ITER_MAX: 20000
 ITER_SIZE: 2
